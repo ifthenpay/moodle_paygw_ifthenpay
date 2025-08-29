@@ -1,0 +1,30 @@
+{
+  "folders": [
+    { "name": "Plugin (repo)", "path": "/workspace/plugin" },
+    { "name": "Moodle Core + Data (bitnami)", "path": "/workspace/bitnami" }
+  ],
+  "settings": {
+    // --- Intelephense: make sure Moodle is indexed ---
+    "intelephense.environment.phpVersion": "8.2",
+    "intelephense.maxMemory": 4096,
+    "intelephense.files.maxSize": 2000000,
+    // Explicitly include Moodle paths so symbols resolve even in multi‑root
+    "intelephense.environment.includePaths": [
+      "/workspace/bitnami/moodle",
+      "/workspace/bitnami/moodle/lib",
+      "/workspace/bitnami/moodle/lib/classes"
+    ],
+    "files.watcherExclude": {
+      "**/bitnami/moodledata/**": true,
+      "**/bitnami/**/cache/**": true,
+      "**/bitnami/**/temp/**": true
+    },
+    "search.exclude": {
+      "**/bitnami/moodledata/**": true,
+      "**/bitnami/**/cache/**": true,
+      "**/bitnami/**/temp/**": true
+    },
+    // Terminals: make splits stay in the same root
+    "terminal.integrated.splitCwd": "workspaceRoot"
+  }
+}

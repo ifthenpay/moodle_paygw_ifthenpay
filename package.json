@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "devDependencies": {
+    "grunt": "^1.6.1",
+    "grunt-contrib-uglify": "^5.2.2",
+    "grunt-contrib-watch": "^1.1.0",
+    "load-grunt-tasks": "^5.1.0"
+  },
+  "scripts": {
+    "build": "grunt build-amd",
+    "watch": "grunt watch-amd"
+  }
+}

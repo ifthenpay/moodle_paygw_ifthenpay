@@ -1,0 +1,38 @@
+{
+  "name": "ifthenpay/moodle-paygw_ifthenpay",
+  "description": "Ifthenpay payment gateway for Moodle",
+  "version": "dev-main",
+  "type": "moodle-plugin",
+  "require": {
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.8",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.1.1",
+    "moodlehq/moodle-cs": "^3.5",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "phpstan/phpstan": "^2.1",
+    "micaherne/phpstan-moodle": "^1.0",
+    "phpmd/phpmd": "^2.15"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "sort-packages": true
+  },
+  "scripts": {
+    "lint": "XDEBUG_MODE=off vendor/bin/phpcs --standard=phpcs.xml --cache=.phpcs-cache src",
+    "fix": [
+      "XDEBUG_MODE=off vendor/bin/phpcbf --standard=phpcs.xml src",
+      "XDEBUG_MODE=off vendor/bin/php-cs-fixer fix src/ --using-cache=no"
+    ],
+    "analyse": "XDEBUG_MODE=off php -d memory_limit=1G vendor/bin/phpstan analyse --configuration=phpstan.neon src",
+    "qa": [
+      "@lint",
+      "@analyse"
+    ]
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

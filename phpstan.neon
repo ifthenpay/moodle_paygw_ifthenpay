@@ -1,0 +1,23 @@
+includes:
+  - vendor/micaherne/phpstan-moodle/extension.neon
+
+parameters:
+  moodle:
+    rootDirectory: /workspace/bitnami/moodle
+
+  level: max
+
+  paths:
+    - src
+
+  bootstrapFiles:
+    - vendor/autoload.php
+
+  tmpDir: ./.phpstan-cache
+  inferPrivatePropertyTypeFromConstructor: true
+  treatPhpDocTypesAsCertain: false
+
+  # Keep only if you still need them; otherwise remove for stricter checks
+  ignoreErrors:
+    - '#^Call to an undefined method moodle#'
+    - '#^Access to an undefined property MoodlePlugin\\\\#'

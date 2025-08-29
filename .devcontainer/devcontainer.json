@@ -1,0 +1,51 @@
+{
+  "name": "ifthenpay Moodle Dev",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "none",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // PHP validation & IntelliSense
+        "php.validate.enable": true,
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "intelephense.environment.phpVersion": "8.2",
+        "intelephense.format.enable": true,
+
+        // Formatting
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "[php]": {
+          "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+        },
+        "editor.codeActionsOnSave": {
+          "source.fixAll": "always",
+          "source.organizeImports": "always"
+        },
+
+        // PHPCS, PHPStan, PHPMD via phpsab
+        "phpSniffer.enable": true,
+        "phpSniffer.executablePath": "${workspaceFolder}/vendor/bin/phpcs",
+        "phpSniffer.standard": "phpcs.xml",
+
+        // Terminal
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "php.suggest.basic": false,
+        "editor.snippetSuggestions": "top"
+      },
+      "extensions": [
+        "bmewburn.vscode-intelephense-client", // PHP IntelliSense & formatting
+        "xdebug.php-debug", // Xdebug debugger
+        "valeryan.vscode-phpsab", // PHPCS, PHPStan, PHPMD integration
+        "editorconfig.editorconfig", // EditorConfig support
+        "ms-azuretools.vscode-docker", // Docker explorer & logs
+        "esbenp.prettier-vscode", // JSON/JS/Markdown formatting
+        "hakcorp.php-awesome-snippets" // (optional) PHP snippets
+      ]
+    }
+  },
+  "forwardPorts": [8080, 8081, 9003],
+  "postCreateCommand": "cd plugin && composer install --no-interaction && npm install",
+  "postStartCommand": "bash plugin/.devcontainer/post-start.sh"
+}

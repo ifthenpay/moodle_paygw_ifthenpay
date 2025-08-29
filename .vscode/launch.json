@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "🪲 Listen for Xdebug (Moodle web)",
+      "type": "php",
+      "request": "launch",
+      "port": 9003,
+      "log": true,
+      "xdebugSettings": {
+        "max_children": 256,
+        "max_data": 512,
+        "max_depth": 5
+      },
+      "pathMappings": {
+        "/bitnami": "/workspace/bitnami",
+        "/bitnami/moodle/payment/gateway/ifthenpay": "/workspace/plugin/src",
+        "/opt/dev/ifthenpay": "/workspace/plugin/src"
+      }
+    },
+    {
+      "name": "🪲 Listen for Xdebug (CLI in dev)",
+      "type": "php",
+      "request": "launch",
+      "port": 9003,
+      "log": false,
+      "pathMappings": {
+        "/workspace": "/workspace"
+      }
+    }
+  ]
+}

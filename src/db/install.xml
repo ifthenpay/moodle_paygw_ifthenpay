@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="payment/gateway/ifthenpay/db" VERSION="2025081409" COMMENT="Ifthenpay minimal tracking" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <TABLES>
+    <TABLE NAME="paygw_ifthenpay_tx" COMMENT="Ifthenpay Pay-by-Link transactions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="token" TYPE="char" LENGTH="64" NOTNULL="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="paymentarea" TYPE="char" LENGTH="100" NOTNULL="true"/>
+        <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="accountid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="amount" TYPE="number" LENGTH="10" DECIMALS="2" NOTNULL="true" DEFAULT="0.00"/>
+        <FIELD NAME="currency" TYPE="char" LENGTH="3" NOTNULL="true"/>
+        <FIELD NAME="gateway_key" TYPE="char" LENGTH="20" NOTNULL="true"/>
+        <FIELD NAME="redirect_url" TYPE="char" LENGTH="255" NOTNULL="false"/>
+        <FIELD NAME="transaction_id" TYPE="char" LENGTH="64" NOTNULL="false"/>
+        <FIELD NAME="paymentid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="PENDING"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="uniq_token" TYPE="unique" FIELDS="token"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="idx_component_item" UNIQUE="false" FIELDS="component, paymentarea, itemid"/>
+        <INDEX NAME="idx_gateway_key" UNIQUE="false" FIELDS="gateway_key"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

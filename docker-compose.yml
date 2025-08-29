@@ -1,0 +1,99 @@
+version: "3.8"
+
+services:
+  # 1) MySQL database for Moodle
+  ifthenpay-db:
+    image: mysql:8.0
+    container_name: ifthenpay-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: moodle
+      MYSQL_USER: moodleuser
+      MYSQL_PASSWORD: userpass
+    command:
+      [
+        "--default-authentication-plugin=mysql_native_password",
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--innodb-file-per-table=1",
+      ]
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+  # 2) Bitnami Moodle app with Xdebug (builds from .devcontainer/Dockerfile.app)
+  ifthenpay-app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile.app
+    container_name: ifthenpay-app
+    depends_on:
+      - ifthenpay-db
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+      MOODLE_DATABASE_TYPE: mysqli
+      MOODLE_DATABASE_HOST: ifthenpay-db
+      MOODLE_DATABASE_NAME: moodle
+      MOODLE_DATABASE_USER: moodleuser
+      MOODLE_DATABASE_PASSWORD: userpass
+      MOODLE_SITE_NAME: ifthenpay Dev Academy
+      MOODLE_LANG: en
+      MOODLE_USERNAME: admin
+      MOODLE_PASSWORD: adminpass
+      MOODLE_EMAIL: admin@ifthenpay.local
+    ports:
+      - "8080:8080"
+    volumes:
+      # Persist Moodle core + moodledata as Bitnami expects
+      - bitnami:/bitnami
+      # Mount ONLY the plugin source into a neutral path to avoid installer conflicts
+      - ./src:/opt/dev/ifthenpay:ro
+    # Installer finished + dataroot writable + plugin dir parent exists
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "set -eu; test -f /bitnami/moodle/config.php && test -d /bitnami/moodle/payment/gateway && test -w /bitnami/moodledata",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 120
+      start_period: 30s
+    restart: unless-stopped
+
+  # 3) phpMyAdmin for convenience
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: phpmyadmin
+    depends_on:
+      - ifthenpay-db
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: ifthenpay-db
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+    restart: unless-stopped
+
+  # 4) VS Code Dev Container
+  dev:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile.dev
+    container_name: ifthenpay-dev
+    depends_on:
+      ifthenpay-app:
+        condition: service_healthy
+    user: vscode
+    # No published ports needed; app connects to dev over Docker network
+    volumes:
+      # Project repo for editing, tools, composer, etc.
+      - ./:/workspace/plugin:cached
+      # Share Bitnami volume for CLI tools, logs, config, etc.
+      - bitnami:/workspace/bitnami:cached
+    working_dir: /workspace
+    restart: unless-stopped
+
+volumes:
+  mysql_data: {}
+  bitnami: {}

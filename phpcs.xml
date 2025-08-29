@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="IfthenPay Moodle Plugin">
+  <description>PHPCS rules for the IfthenPay Moodle plugin.</description>
+
+  <!-- Moodle standard (brings PHPCompatibility via Composer installer) -->
+  <rule ref="moodle"/>
+
+  <arg name="extensions" value="php"/>
+  <arg name="basepath" value="."/>
+  <arg name="parallel" value="8"/>
+
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/tests/*</exclude-pattern>
+</ruleset>
