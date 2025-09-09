@@ -61,6 +61,7 @@ $string['backoffice_key_desc'] = 'Used to authenticate API calls and webhooks.';
 $string['error_invalidformat'] = 'Invalid format. Use 1234-5678-9012-3456.';
 $string['error_invalid_backoffice_key'] = 'The Backoffice Key is not valid. Please check and try again.';
 
+
 // Errors for API responses.
 $string['api:nobackofficekey_error'] = 'API: No Backoffice Key configured.';
 $string['api:error_invalid_pbl_response'] = 'Invalid response from Pay-by-Link API.';
@@ -106,9 +107,6 @@ $string['process:cancel_desc_cancel']  = 'You canceled the payment before it was
 $string['process:cancel_desc_error']   = 'We could not confirm your payment due to an error. You can try again or contact support.';
 $string['process:status_canceled']     = 'Canceled';
 $string['process:status_error']        = 'Error';
-$string['process:order_reference']     = 'Order reference';
-$string['process:transaction_id']      = 'Transaction ID';
-$string['process:amount']              = 'Amount';
 $string['process:btn_try_again']       = 'Try again';
 $string['process:btn_contact_support'] = 'Contact support';
 $string['process:not_found']           = 'Payment attempt not found.';

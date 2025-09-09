@@ -82,7 +82,9 @@ $string['form:noaccounts'] = 'Sem contas disponíveis';
 
 $string['form:other_configuration'] = 'Definições adicionais';
 $string['form:default_method'] = 'Método predefinido (Opcional)';
-$string['form:default_method_help'] = 'Método pré-selecionado no checkout.';
+$string['form:default_method_help'] =
+    'Opcional. Se ativo, este método será o pré-selecionado no checkout quando multiplicos métodos estão ativos. Selecione "Nenhum" para que o cliente escolha sem a pré-seleção.';
+$string['form:default_method_none'] = 'Nenhum';
 $string['form:description'] = 'Descrição do checkout (Opcional)';
 $string['form:description_help'] = 'Texto opcional, até 150 caracteres, apresentado no checkout.';
 
@@ -105,9 +107,6 @@ $string['process:cancel_desc_cancel']  = 'O pagamento foi cancelado. Pode tentar
 $string['process:cancel_desc_error']   = 'Ocorreu um erro ao processar o pagamento. Pode tentar novamente ou contactar o suporte.';
 $string['process:status_canceled']     = 'Cancelado';
 $string['process:status_error']        = 'Erro';
-$string['process:order_reference']     = 'Referência da encomenda';
-$string['process:transaction_id']      = 'ID da transação';
-$string['process:amount']              = 'Montante';
 $string['process:btn_try_again']       = 'Tentar novamente';
 $string['process:btn_contact_support'] = 'Contactar o suporte';
 $string['process:not_found']           = 'Tentativa de pagamento não encontrada.';

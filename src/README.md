@@ -1,44 +1,40 @@
-# ifthenpay #
+<h1 align="center">ifthenpay | Payment Gateway</h1>
+<h3 align="center">📦 A Payment Gateway Plugin for Moodle 📦</h1>
 
-TO-DO Describe the plugin shortly here.
+Accept diverse payments—including credit and store cards (like Cartão Crédito and Cofidis Pay), mobile and digital wallets (such as Apple Pay, Google Pay, MBWAY, Bizum, and Pix), and local bank transfers (Multibanco and Payshop)—all through our secure gateway.
 
-TO-DO Provide more detailed description here.
+To unlock the full potential of this integration, users must have an active ifthenpay account. Once subscribed, you'll need to activate a Gateway Key and associate/activate your selected Payment Methods by [contacting our helpdesk](https://helpdesk.ifthenpay.com/en/support/home). Please note that our services operate under a tariff structure; users should check tariffs per payment method in our website.
 
-## Installing via uploaded ZIP file ##
+## Setup 📥
 
-1. Log in to your Moodle site as an admin and go to _Site administration >
-   Plugins > Install plugins_.
-2. Upload the ZIP file with the plugin code. You should only be prompted to add
-   extra details if your plugin type is not automatically detected.
-3. Check the plugin validation report and finish the installation.
+1. Install the plugin in your Moodle instance.
+2. Ensure you have an **ifthenpay** account. If not, you can [create one here](https://ifthenpay.com/aderir/).
+3. Retrieve your **Backoffice Key** and generate one or more **Gateway Keys** as needed.
+4. Configure each Gateway Key with the desired payment methods and associated accounts (with support from our helpdesk team).
+5. In Moodle, configure the ifthenpay payment account by chosing the desired Gateway Key and link it to the associated payment methods.
+6. Enable **Enrolment on Payment** for the Moodle courses you wish to offer with paid access.
+7. Configure the enrolment method for each course, specifying the currency you want to accept.
 
-## Installing manually ##
+## Language Support 🌍
 
-The plugin can be also installed by putting the contents of this directory to
+This plugin currently supports the following languages:
 
-    {your/moodle/dirroot}/payment/gateway/ifthenpay
+- 🇬🇧 **English (UK)** — `en-UK`
+- 🇵🇹 **Portuguese (Portugal)** — `pt-PT`
 
-Afterwards, log in to your Moodle site as an admin and go to _Site administration >
-Notifications_ to complete the installation.
+The plugin will automatically adapt its text and interface to match the language configured in your Moodle settings, ensuring a seamless experience for both admins and customers.
 
-Alternatively, you can run
+## Support & Maintenance 🛠️
 
-    $ php admin/cli/upgrade.php
+If you encounter issues or need assistance, please refer to the following resources:
 
-to complete the installation from the command line.
+- 📖 [Official ifthenpay FAQ](https://helpdesk.ifthenpay.com/en/support/home)
+- 📬 Support Email: `suporte@ifthenpay.com`
 
-## License ##
+#### Keeping the Plugin Updated:
 
-2025 ifthenpay <ifthenpay@ifthenpay.com>
+- Always use the latest versions of Moodle, and this plugin.
+- Review the changelog before updating.
+- After updates, test payment flows to ensure functionality.
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-this program.  If not, see <https://www.gnu.org/licenses/>.
+Regular updates and active monitoring will ensure continued compatibility and optimal performance.
