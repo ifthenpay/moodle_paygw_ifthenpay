@@ -75,7 +75,7 @@ if ($action === 'verify') {
 
     while (time() < $deadline) {
         try {
-            if ($client->get_transaction_status("eMGcVmLsFyPHt2Kb73g1") === true) {
+            if ($client->get_transaction_status($txid) === true) {
                 // Directly call the shared processor (no self-HTTP).
                 paygw_ifthenpay_process_webhook(
                     $token,
@@ -128,7 +128,7 @@ $str = (object)[
 ];
 
 $PAGE->set_title($str->title);
-$PAGE->set_heading($str->title);
+$PAGE->set_heading(get_string('gatewayname', 'paygw_ifthenpay'));
 
 // JS dataset + AMD boot (same pattern as admin form).
 $verifyurl   = (new moodle_url('/payment/gateway/ifthenpay/return.php', $params + ['action' => 'verify']))->out(false);
@@ -167,7 +167,7 @@ echo html_writer::start_div('col-md-8 col-lg-7');
 echo html_writer::start_div('card shadow-sm rounded-3');
 echo html_writer::start_div('card-body p-4 p-md-5');
 
-echo html_writer::start_div('mb-3 d-flex align-items-center gap-3');
+echo html_writer::start_div('mb-3 d-flex align-items-center', ['style' => 'gap:1rem']);
 echo html_writer::tag('span', '', [
     'id' => 'ifp-spinner',
     'class' => 'spinner-border spinner-border-sm',

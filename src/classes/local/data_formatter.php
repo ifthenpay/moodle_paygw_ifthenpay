@@ -80,7 +80,7 @@ class data_formatter
             ];
         }
         // Ensure stable ordering by position.
-        uasort($methods, fn ($a, $b) => $a['position'] <=> $b['position']);
+        uasort($methods, fn($a, $b) => $a['position'] <=> $b['position']);
         return $methods;
     }
 
@@ -145,12 +145,12 @@ class data_formatter
         $cancel = (new \moodle_url('/payment/gateway/ifthenpay/cancel.php', [
             'token' => $token,
             'type'  => 'CANCEL',
-        ]))->out(false) . '&txid=[TRANSACTIONID]';
+        ]))->out(false);
 
         $error = (new \moodle_url('/payment/gateway/ifthenpay/cancel.php', [
             'token' => $token,
             'type'  => 'ERROR',
-        ]))->out(false) . '&txid=[TRANSACTIONID]';
+        ]))->out(false);
 
         $payload = [
             'id'          => $token,
@@ -161,7 +161,6 @@ class data_formatter
             'success_url' => $success,
             'cancel_url'  => $cancel,
             'error_url'   => $error,
-            'btnCloseUrl' => $cancel,
         ];
 
         // Only include selected_method when a default is chosen (not “Noone”).

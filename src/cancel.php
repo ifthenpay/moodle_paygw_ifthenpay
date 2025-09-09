@@ -30,7 +30,6 @@ require_login();
 
 $token = required_param('token', PARAM_ALPHANUMEXT);
 $type  = required_param('type', PARAM_ALPHA);        // CANCEL or ERROR.
-$txid  = required_param('txid', PARAM_RAW_TRIMMED);
 
 global $DB, $CFG, $PAGE, $OUTPUT;
 
@@ -45,7 +44,6 @@ $str = (object)[
     'status_cancel' => get_string('process:status_canceled', 'paygw_ifthenpay'),
     'status_error' => get_string('process:status_error', 'paygw_ifthenpay'),
     'ref'          => get_string('process:order_reference', 'paygw_ifthenpay'),
-    'txid'         => get_string('process:transaction_id', 'paygw_ifthenpay'),
     'amount'       => get_string('process:amount', 'paygw_ifthenpay'),
     'tryagain'     => get_string('process:btn_try_again', 'paygw_ifthenpay'),
     'support'      => get_string('process:btn_contact_support', 'paygw_ifthenpay'),
@@ -53,11 +51,11 @@ $str = (object)[
 ];
 
 // Page basics.
-$params = ['token' => $token, 'type' => $type, 'txid' => $txid];
+$params = ['token' => $token, 'type' => $type];
 $PAGE->set_url(new moodle_url('/payment/gateway/ifthenpay/cancel.php', $params));
 $PAGE->set_context(context_system::instance());
 $PAGE->set_title($str->title);
-$PAGE->set_heading(get_string('pluginname', 'paygw_ifthenpay'));
+$PAGE->set_heading(get_string('gatewayname', 'paygw_ifthenpay'));
 
 echo $OUTPUT->header();
 
@@ -71,10 +69,7 @@ if (!$rec) {
     exit;
 }
 
-// Persist txid & state (idempotent).
-if (empty($rec->transaction_id)) {
-    $rec->transaction_id = $txid;
-}
+// Persist state (idempotent).
 if ((string)$rec->state !== 'PAID') {
     $rec->state = (strtoupper($type) === 'ERROR') ? 'ERROR' : 'CANCELED';
 }
@@ -95,7 +90,6 @@ $support = !empty($CFG->supportemail)
 // Already formatted upstream.
 $amount = s((string)$rec->amount) . ' ' . s($rec->currency);
 $ref    = s($rec->token);
-$txids  = s((string)$rec->transaction_id);
 
 // Render (core Bootstrap only).
 echo html_writer::start_div('container my-5');
@@ -111,7 +105,6 @@ echo html_writer::tag('p', $desc, ['class' => 'text-muted mb-4']);
 
 $dl  = html_writer::start_tag('dl', ['class' => 'row small mb-4']);
 $dl .= html_writer::tag('dt', $str->ref, ['class' => 'col-sm-4']) . html_writer::tag('dd', $ref, ['class' => 'col-sm-8']);
-$dl .= html_writer::tag('dt', $str->txid, ['class' => 'col-sm-4']) . html_writer::tag('dd', $txids, ['class' => 'col-sm-8']);
 $dl .= html_writer::tag('dt', $str->amount, ['class' => 'col-sm-4']) . html_writer::tag('dd', $amount, ['class' => 'col-sm-8']);
 $dl .= html_writer::end_tag('dl');
 echo $dl;
