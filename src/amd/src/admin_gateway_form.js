@@ -31,10 +31,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(["jquery"], function ($) {
+define(["jquery"], function($) {
   "use strict";
 
-  // ---- tiny DOM helpers -----------------------------------------------------
+  // Tiny DOM helpers.
   const Dom = {
     byName(name, tag) {
       let $el = $("#id_" + name);
@@ -58,7 +58,6 @@ define(["jquery"], function ($) {
     },
   };
 
-  // ---- module ---------------------------------------------------------------
   class IfthenpayAdminForm {
     /**
      * @param {{selectors:Object, i18n:Object}} cfg
@@ -78,18 +77,21 @@ define(["jquery"], function ($) {
       this.$state = this.s.state ? Dom.byName(this.s.state) : $();
 
       // Per-row caches.
-      this._cb = new Map(); // methodKey -> $checkbox
-      this._sel = new Map(); // methodKey -> $select
+      this._cb = new Map(); // MethodKey -> $checkbox
+      this._sel = new Map(); // MethodKey -> $select
     }
 
+    /**
+     * Initialise the module (attach events, etc).
+     */
     init() {
-      if (!this.$gk.length) return;
+      if (!this.$gk.length) {return;}
 
       // Initial render pass: build from LIVE dataset,
       // defaults were applied by PHP; we just enforce row consistency and sync.
       const gk = this.$gk.val();
       this.methodKeys.forEach((m) =>
-        this.applyRowCycle(m, gk, /*initial*/ true)
+        this.applyRowCycle(m, gk, /* initial*/ true)
       );
       this.syncAllToState();
 
@@ -100,17 +102,27 @@ define(["jquery"], function ($) {
       this.bindSubmitGuard();
     }
 
-    // -- cached getters
+
+    /**
+     * Cached accessors (methods checkboxes).
+     *
+     * @param methodKey
+     */
     $cbOf(methodKey) {
       const key = this.s.enablePrefix + methodKey;
-      if (this._cb.has(key)) return this._cb.get(key);
+      if (this._cb.has(key)) {return this._cb.get(key);}
       const $el = Dom.checkbox(key);
       this._cb.set(key, $el);
       return $el;
     }
+    /**
+     * Cached accessors (methods dropdowns/selectors).
+     *
+     * @param methodKey
+     */
     $selOf(methodKey) {
       const key = this.s.accountPrefix + methodKey;
-      if (this._sel.has(key)) return this._sel.get(key);
+      if (this._sel.has(key)) {return this._sel.get(key);}
       const $el = Dom.select(key);
       this._sel.set(key, $el);
       return $el;
@@ -121,11 +133,15 @@ define(["jquery"], function ($) {
      * - Rebuild select options from LIVE dataset
      * - Keep current selection if still valid, else pick first
      * - Lock controls if no accounts or if checkbox off
+     *
+     * @param methodKey
+     * @param gatewayKey
+     * @param initial
      */
     applyRowCycle(methodKey, gatewayKey, initial = false) {
       const $cb = this.$cbOf(methodKey);
       const $sel = this.$selOf(methodKey);
-      if (!$cb.length || !$sel.length) return;
+      if (!$cb.length || !$sel.length) {return;}
 
       const optionsByMethod =
         this.ds.accounts && this.ds.accounts[gatewayKey]
@@ -136,7 +152,7 @@ define(["jquery"], function ($) {
       // If there are no accounts for this method under this GK, force off + lock.
       if (!hasAccounts) {
         $cb.prop("checked", false).prop("disabled", true);
-        this.lockSelect($sel, true, /*forceEmpty*/ true);
+        this.lockSelect($sel, true, /* forceEmpty*/ true);
       } else {
         // Enable checkbox; select is enabled iff checkbox is checked.
         $cb.prop("disabled", false);
@@ -148,6 +164,9 @@ define(["jquery"], function ($) {
      * Rebuilds a <select> from a map (id => label).
      * Keeps previous value if still present; otherwise selects the first value.
      * Inserts a placeholder ('' => i18n.noaccounts) if map is empty and selects it.
+     *
+     * @param $sel
+     * @param map
      * @returns {boolean} true if it has real accounts; false if placeholder only.
      */
     rebuildSelect($sel, map) {
@@ -178,7 +197,13 @@ define(["jquery"], function ($) {
       return true;
     }
 
-    /** Toggle disabled + subtle UI class for selects. */
+    /**
+     * Toggle disabled + subtle UI class for selects.
+     *
+     * @param $sel
+     * @param locked
+     * @param forceEmpty
+     */
     lockSelect($sel, locked, forceEmpty) {
       $sel.toggleClass("ifp-ui-locked", !!locked);
       if (locked) {
@@ -195,19 +220,32 @@ define(["jquery"], function ($) {
       }
     }
 
-    // ---- state sync (hidden input mirrors UI) -------------------------------
+    /**
+     * State sync (hidden input mirrors UI).
+     */
     readState() {
-      if (!this.$state.length) return { gatewaykey: "", methods: {} };
+      if (!this.$state.length) {return {gatewaykey: "", methods: {}};}
       const raw = this.$state.val() || "{}";
       const st = Dom.parseJSON(raw, {}) || {};
-      if (!st.methods || typeof st.methods !== "object") st.methods = {};
+      if (!st.methods || typeof st.methods !== "object") {st.methods = {};}
       return st;
     }
 
+    /**
+     * Write state back to hidden input.
+     *
+     * @param st
+     */
     writeState(st) {
-      if (this.$state.length) this.$state.val(JSON.stringify(st));
+      if (this.$state.length) {this.$state.val(JSON.stringify(st));}
     }
 
+    /**
+     * Sync one row (payment method div) from UI to state.
+     *
+     * @param st
+     * @param methodKey
+     */
     syncRow(st, methodKey) {
       const $cb = this.$cbOf(methodKey);
       const $sel = this.$selOf(methodKey);
@@ -217,16 +255,21 @@ define(["jquery"], function ($) {
       };
     }
 
+    /**
+     * Sync all rows + top-level fields to state.
+     */
     syncAllToState() {
       const st = this.readState();
       st.gatewaykey = this.$gk.val() || "";
-      if (this.$def.length) st.defaultmethod = this.$def.val() || "";
-      if (this.$desc.length) st.description = this.$desc.val() || "";
+      if (this.$def.length) {st.defaultmethod = this.$def.val() || "";}
+      if (this.$desc.length) {st.description = this.$desc.val() || "";}
       this.methodKeys.forEach((m) => this.syncRow(st, m));
       this.writeState(st);
     }
 
-    // ---- bindings -----------------------------------------------------------
+    /**
+     * Bind GK selector change.
+     */
     bindGatewayChange() {
       this.$gk.on("change", () => {
         const gk = this.$gk.val();
@@ -235,6 +278,9 @@ define(["jquery"], function ($) {
       });
     }
 
+    /**
+     * Bind method row changes (checkboxes, selects).
+     */
     bindMethodRowChanges() {
       this.methodKeys.forEach((m) => {
         const $cb = this.$cbOf(m);
@@ -252,12 +298,18 @@ define(["jquery"], function ($) {
       });
     }
 
+    /**
+     * Bind other changes (description, default method).
+     */
     bindOtherChanges() {
-      if (this.$def.length) this.$def.on("change", () => this.syncAllToState());
+      if (this.$def.length) {this.$def.on("change", () => this.syncAllToState());}
       if (this.$desc.length)
-        this.$desc.on("input change", () => this.syncAllToState());
+        {this.$desc.on("input change", () => this.syncAllToState());}
     }
 
+    /**
+     * Bind form submit guard (sync state before submit).
+     */
     bindSubmitGuard() {
       const $form = this.$gk.closest("form");
       if ($form.length) {
@@ -266,12 +318,17 @@ define(["jquery"], function ($) {
     }
   }
 
-  // AMD entry point.
+  /**
+   * AMD entry point.
+   *
+   * @param selectors
+   * @param i18n
+   */
   function init(selectors, i18n) {
     const dataset = window.ifthenpay || {};
-    const app = new IfthenpayAdminForm({ selectors, i18n }, dataset);
+    const app = new IfthenpayAdminForm({selectors, i18n}, dataset);
     app.init();
   }
 
-  return { init };
+  return {init};
 });

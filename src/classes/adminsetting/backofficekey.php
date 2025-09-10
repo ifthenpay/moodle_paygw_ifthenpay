@@ -24,8 +24,6 @@
 
 namespace paygw_ifthenpay\adminsetting;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Behaviour:
  * - Accepts empty values (does not block installation or explicit clearing).

@@ -26,8 +26,6 @@ namespace paygw_ifthenpay\local;
 
 use moodle_exception;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Notes:
  * - Performs remote validation of the Backoffice Key during construction.
@@ -85,7 +83,7 @@ final class api_client
 
         // 1) Remote validation (business logic; format checks live elsewhere).
         if (!$this->remote_validate_backoffice_key($backofficekey)) {
-            throw new moodle_exception('api:error_invalid_backoffice_key', 'paygw_ifthenpay');
+            throw new moodle_exception('error_invalid_backoffice_key', 'paygw_ifthenpay');
         }
 
         // 2) Persist the validated key.
@@ -256,17 +254,23 @@ final class api_client
      * @throws moodle_exception On transport/JSON errors.
      */
     private function remote_validate_backoffice_key(string $key): bool {
-        $url = self::ENTITIES_SUBENTIDADES_URL . '?chavebackoffice=' . rawurlencode($key);
+        $url  = self::ENTITIES_SUBENTIDADES_URL . '?chavebackoffice=' . rawurlencode($key);
         $data = $this->get_json($url);
 
-        if (!is_array($data) || empty($data)) {
+        if (!is_array($data) || !$data) {
             return false;
         }
 
         foreach ($data as $item) {
-            $hasentity  = !empty($item['Entidade']);
-            $hassubents = !empty($item['SubEntidade']) && is_array($item['SubEntidade']);
-            if ($hasentity && $hassubents) {
+            if (!is_array($item)) {
+                continue;
+            }
+            $ent = isset($item['Entidade']) ? trim((string)$item['Entidade']) : '';
+            $subs = isset($item['SubEntidade']) && is_array($item['SubEntidade'])
+                ? array_filter($item['SubEntidade'], static fn($s) => trim((string)$s) !== '')
+                : [];
+
+            if ($ent !== '' && !empty($subs)) {
                 return true;
             }
         }
@@ -377,10 +381,10 @@ final class api_client
     }
 
     /**
-     * Normalize header map into "\$name: \$value" strings for \curl::setHeader().
+     * Normalize a header map into "Name: Value" strings for \curl::setHeader().
      *
-     * @param array<string,string> $headers Header map.
-     * @return array List of "Name: Value" header strings.
+     * @param array  $headers Header map (name => value).
+     * @return string[] List of "Name: Value" header strings.
      */
     protected function normalize_headers(array $headers): array {
         $out = [];

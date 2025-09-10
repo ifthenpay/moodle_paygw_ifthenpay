@@ -21,38 +21,37 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(["core/templates", "core/modal_factory"], function (
+/* eslint-disable promise/always-return */
+/* eslint-disable no-empty-function */
+/* eslint-disable no-undef */
+
+define(["core/templates", "core/modal_factory"], function(
   Templates,
   ModalFactory
 ) {
-  const showModalWithPlaceholder = function () {
+  const showModalWithPlaceholder = function() {
     return ModalFactory.create({
       body: Templates.render(
         "paygw_ifthenpay/ifthenpay_button_placeholder",
         {}
       ),
-    }).then(function (modal) {
+    }).then(function(modal) {
       modal.show();
     });
   };
 
-  const process = function (component, paymentArea, itemId, description) {
-    return showModalWithPlaceholder().then(function () {
+  const process = function(component, paymentArea, itemId, description) {
+    return showModalWithPlaceholder().then(function() {
       window.location.href =
-        M.cfg.wwwroot +
-        "/payment/gateway/ifthenpay/pay.php?" +
-        "component=" +
-        component +
-        "&paymentarea=" +
-        paymentArea +
-        "&itemid=" +
-        itemId +
-        "&description=" +
-        description;
+        M.cfg.wwwroot + "/payment/gateway/ifthenpay/pay.php?"
+        + "component=" + component
+        + "&paymentarea=" + paymentArea
+        + "&itemid=" + itemId
+        + "&description=" + description;
       // Keep promise pending to avoid UI race conditions.
-      return new Promise(function () {});
+      return new Promise(function() {});
     });
   };
 
-  return { process: process };
+  return {process: process};
 });

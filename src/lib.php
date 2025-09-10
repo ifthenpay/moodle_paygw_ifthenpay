@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 use paygw_ifthenpay\local\api_client;
 use paygw_ifthenpay\local\data_formatter;
 
@@ -186,7 +184,7 @@ function paygw_ifthenpay_get_accounts_by_gateway_map(string $gatewaykey): array 
  * @return array Ordered list of method keys.
  */
 function paygw_ifthenpay_order_method_keys(array $methodsrich): array {
-    uasort($methodsrich, fn ($a, $b) => ($a['position'] ?? 0) <=> ($b['position'] ?? 0));
+    uasort($methodsrich, fn($a, $b) => ($a['position'] ?? 0) <=> ($b['position'] ?? 0));
     return array_keys($methodsrich);
 }
 

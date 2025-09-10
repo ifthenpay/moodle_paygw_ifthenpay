@@ -13,16 +13,37 @@
         "intelephense.environment.phpVersion": "8.2",
         "intelephense.format.enable": true,
 
-        // Formatting
+        // Formatting (global defaults)
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "[php]": {
           "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
         },
+
+        // Avoid formatter conflicts: let ESLint/Stylelint handle JS/CSS fixes
+        "[javascript]": {
+          "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        },
+        // CSS: rely on Stylelint code actions instead of Prettier formatting
+        "[css]": {
+          "editor.formatOnSave": false
+        },
+        // Keep Prettier for non-code docs
+        "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+        "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+        // Auto-fix on save (ESLint + Stylelint + imports)
         "editor.codeActionsOnSave": {
-          "source.fixAll": "always",
+          "source.fixAll.eslint": "always",
+          "source.fixAll.stylelint": "always",
           "source.organizeImports": "always"
         },
+
+        // ESLint & Stylelint integration
+        "eslint.validate": ["javascript"],
+        "eslint.format.enable": true,
+        "eslint.useFlatConfig": true,
+        "stylelint.validate": ["css"],
 
         // PHPCS, PHPStan, PHPMD via phpsab
         "phpSniffer.enable": true,
@@ -35,13 +56,20 @@
         "editor.snippetSuggestions": "top"
       },
       "extensions": [
-        "bmewburn.vscode-intelephense-client", // PHP IntelliSense & formatting
-        "xdebug.php-debug", // Xdebug debugger
-        "valeryan.vscode-phpsab", // PHPCS, PHPStan, PHPMD integration
-        "editorconfig.editorconfig", // EditorConfig support
-        "ms-azuretools.vscode-docker", // Docker explorer & logs
-        "esbenp.prettier-vscode", // JSON/JS/Markdown formatting
-        "hakcorp.php-awesome-snippets" // (optional) PHP snippets
+        // Linters & formatters
+        "dbaeumer.vscode-eslint",
+        "stylelint.vscode-stylelint",
+        "esbenp.prettier-vscode",
+
+        // PHP tooling
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "valeryan.vscode-phpsab",
+        "hakcorp.php-awesome-snippets",
+
+        // Utilities
+        "editorconfig.editorconfig",
+        "ms-azuretools.vscode-docker"
       ]
     }
   },
