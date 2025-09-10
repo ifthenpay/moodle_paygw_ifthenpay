@@ -34,9 +34,10 @@ Ifthenpay payment gateway plugin for <a href="https://moodle.org/">Moodle</a> wi
 
 - **Runtime:** <a href="https://moodle.org/">Moodle</a> · <a href="https://www.php.net/">PHP</a> ≥ 8.2 · <a href="https://xdebug.org/">Xdebug</a> 3
 - **Database:** <a href="https://dev.mysql.com/doc/refman/8.0/en/">MySQL 8.0</a>
-- **Dev Environment:** <a href="https://code.visualstudio.com/docs/devcontainers/containers">VS Code Dev Containers</a> + <a href="https://docs.docker.com/compose/">docker‑compose</a>
-- **PHP Tooling:** <a href="https://getcomposer.org/">Composer</a> · <a href="https://github.com/squizlabs/PHP_CodeSniffer">PHPCS</a> (Moodle CS) · <a href="https://cs.symfony.com/">PHP‑CS‑Fixer</a> · <a href="https://phpstan.org/">PHPStan</a> · <a href="https://phpmd.org/">PHPMD</a>
-- **JS/AMD:** <a href="https://nodejs.org/">Node</a> 20 + <a href="https://gruntjs.com/">Grunt</a>
+- **Dev Environment:** <a href="https://code.visualstudio.com/docs/devcontainers/containers">VS Code Dev Containers</a> + <a href="https://docs.docker.com/compose/">docker-compose</a>
+- **PHP Tooling:** <a href="https://getcomposer.org/">Composer</a> · <a href="https://github.com/squizlabs/PHP_CodeSniffer">PHPCS</a> (Moodle CS) · <a href="https://cs.symfony.com/">PHP-CS-Fixer</a> · <a href="https://phpstan.org/">PHPStan</a> · <a href="https://phpmd.org/">PHPMD</a>
+- **JS/AMD:** <a href="https://nodejs.org/">Node</a> 20 + <a href="https://gruntjs.com/">Grunt</a> (uglify, watch)
+- **JS QA:** <a href="https://eslint.org/">ESLint</a> (with <a href="https://github.com/gajus/eslint-plugin-jsdoc">JSDoc</a>, <a href="https://github.com/xjamundx/eslint-plugin-promise">Promise</a>, <a href="https://babel.dev/docs/eslint-plugin-babel">Babel</a>, <a href="https://eslint.org/docs/latest/use/configure/migration-guide">Globals</a>) · <a href="https://stylelint.io/">Stylelint</a> (+ <a href="https://github.com/stylelint-stylistic/stylelint-stylistic">Stylistic plugin</a> · <a href="https://github.com/stylelint/stylelint-config-standard">Config Standard</a>)
 
 ---
 
@@ -67,7 +68,7 @@ Ifthenpay payment gateway plugin for <a href="https://moodle.org/">Moodle</a> wi
 ├─ src/                        # Plugin source (PHP, templates, AMD JS under src/amd/*)
 ├─ vendor/                     # Composer dependencies
 ├─ composer.json               # PHP toolchain (PHPCS, PHP-CS-Fixer, PHPStan, PHPMD)
-├─ package.json                # JS toolchain (Grunt)
+├─ package.json                # JS toolchain (Grunt, ESLint, Stylelint)
 ├─ Gruntfile.js                # AMD build/watch tasks
 ├─ phpcs.xml                   # Coding standards (Moodle CS)
 ├─ phpstan.neon                # Static analysis config
@@ -109,7 +110,7 @@ Ifthenpay payment gateway plugin for <a href="https://moodle.org/">Moodle</a> wi
 
 ```bash
 composer run lint      # PHPCS (Moodle CS)
-composer run fix       # PHPCBF + PHP-CS-Fixer
+composer run lint:fix  # PHPCBF + PHP-CS-Fixer
 composer run analyse   # PHPStan
 composer run qa        # Lint + Analyse
 ```
@@ -117,8 +118,16 @@ composer run qa        # Lint + Analyse
 **JS / AMD (Grunt)**
 
 ```bash
-npm run build          # Build AMD bundles
-npm run watch          # Watch & rebuild bundles
+npm run build         # Build AMD bundles (Grunt)
+npm run watch         # Watch & rebuild AMD bundles
+
+npm run lint:js       # Lint JavaScript (ESLint)
+npm run lint:js:fix   # Auto-fix JavaScript issues
+npm run lint:css      # Lint CSS (Stylelint)
+npm run lint:css:fix  # Auto-fix CSS issues
+
+npm run lint          # Run all linters
+npm run lint:fix      # Auto-fix all fixable issues
 ```
 
 ---
@@ -168,7 +177,7 @@ src/
 │  └─ ifthenpay_button_placeholder.mustache  # UI partials
 │
 ├─ cancel.php                       # Cancel/error landing
-├─ lib.php                          # Business logic processing/manipulation
+├─ lib.php                          # Business logic (helper functions)
 ├─ pay.php                          # Starts a payment attempt
 ├─ return.php                       # Handles return from provider (poll + update)
 ├─ settings.php                     # Admin settings (Plugin Core settings)

@@ -27,8 +27,6 @@ namespace paygw_ifthenpay\local;
 use moodle_url;
 use stdClass;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Formatters and payload constructors for the ifthenpay integration.
  *
@@ -125,11 +123,11 @@ class data_formatter
      * - Options (methods/accounts) are constrained by the admin form.
      * - The default method is optional; when not set (“Noone”) we omit selected_method.
      *
-     * @param float    $cost          Raw payment amount.
-     * @param stdClass $state         Decoded ifthenpay_state (gateway form state).
-     * @param string   $token         Unique token for this payment attempt.
-     * @param string   $desc_checkout Optional checkout description.
-     * @return array   Payload for api_client::create_pay_by_link().
+     * @param float     $cost          Raw payment amount.
+     * @param \stdClass $state         Decoded ifthenpay_state (gateway form state).
+     * @param string    $token         Unique token for this payment attempt.
+     * @param string    $desc_checkout  Optional checkout description.
+     * @return array    Payload for api_client::create_pay_by_link().
      */
     public static function build_pay_by_link_payload(
         float $cost,

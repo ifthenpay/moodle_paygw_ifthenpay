@@ -23,7 +23,7 @@
   },
   "scripts": {
     "lint": "XDEBUG_MODE=off vendor/bin/phpcs --standard=phpcs.xml --cache=.phpcs-cache src",
-    "fix": [
+    "lint:fix": [
       "XDEBUG_MODE=off vendor/bin/phpcbf --standard=phpcs.xml src",
       "XDEBUG_MODE=off vendor/bin/php-cs-fixer fix src/ --using-cache=no"
     ],

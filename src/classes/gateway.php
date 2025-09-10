@@ -24,9 +24,9 @@
 
 namespace paygw_ifthenpay;
 
-require_once(__DIR__ . '/../lib.php');
-
 defined('MOODLE_INTERNAL') || die();
+
+require_once(__DIR__ . '/../lib.php');
 
 use core_payment\form\account_gateway;
 
@@ -383,7 +383,7 @@ final class gateway extends \core_payment\gateway
         $description = (string) ($state['description'] ?? '');
 
         // 2) Require at least one enabled method.
-        if (!array_filter($methods, fn ($m) => !empty($m['enabled']))) {
+        if (!array_filter($methods, fn($m) => !empty($m['enabled']))) {
             $errors['ifp_paycfg_note'] = get_string('form:error_no_methods_enabled', 'paygw_ifthenpay');
         }
 

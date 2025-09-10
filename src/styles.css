@@ -1,37 +1,37 @@
 /* Force row layout: left group + right select */
 .ifp-row fieldset > .d-flex {
-  display: flex;
-  justify-content: space-between; /* space out left and right */
-  align-items: center;
-  flex-wrap: nowrap; /* prevent breaking */
+    display: flex;
+    justify-content: space-between; /* space out left and right */
+    align-items: center;
+    flex-wrap: nowrap; /* prevent breaking */
 }
 
 /* Left section (checkbox + logo + label) */
 .ifp-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* Logo size */
 .ifp-logo img {
-  height: 18px;
-  width: auto;
-  display: block;
+    height: 18px;
+    width: auto;
+    display: block;
 }
 
 /* Label */
 .ifp-label {
-  font-weight: 600;
-  white-space: nowrap;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 /* Right section: dropdown */
 .ifp-select {
-  margin-left: auto; /* push all the way right */
+    margin-left: auto; /* push all the way right */
 }
 
 .ifp-select select.custom-select {
-  width: 260px; /* fixed uniform width */
-  max-width: 100%;
+    width: 260px; /* fixed uniform width */
+    max-width: 100%;
 }

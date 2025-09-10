@@ -22,14 +22,25 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define([], function () {
+define([], function() {
   "use strict";
 
+  /**
+   * Get element by ID (self-contained).
+   *
+   * @param id
+   */
   function $(id) {
     return document.getElementById(id);
   }
+  /**
+   * Retry Button toggle.
+   *
+   * @param btn
+   * @param yes
+   */
   function disable(btn, yes) {
-    if (!btn) return;
+    if (!btn) {return;}
     if (yes) {
       btn.setAttribute("disabled", "disabled");
       btn.classList.add("disabled");
@@ -57,6 +68,9 @@ define([], function () {
       this.retried = false;
     }
 
+    /**
+     * Initialise the module (attach events, etc).
+     */
     init() {
       if (!this.ds.verifyUrl || !this.retry || !this.spinner || !this.status) {
         return;
@@ -67,20 +81,28 @@ define([], function () {
       // Single-use retry.
       this.retry.addEventListener("click", (e) => {
         e.preventDefault();
-        if (this.retried || this.busy) return;
+        if (this.retried || this.busy) {return;}
         this.retried = true;
         this.verifyOnce();
       });
     }
 
+    /**
+     * Set busy state (spinner + disable retry button).
+     *
+     * @param on
+     */
     setBusy(on) {
       this.busy = !!on;
-      if (this.spinner) this.spinner.style.display = on ? "" : "none";
+      if (this.spinner) {this.spinner.style.display = on ? "" : "none";}
       if (this.status && this.t.verifying)
-        this.status.textContent = this.t.verifying;
-      disable(this.retry, on || this.retried); // lock after first click
+        {this.status.textContent = this.t.verifying;}
+      disable(this.retry, on || this.retried); // Lock after first click
     }
 
+    /**
+     * Ajax call to verify payment status.
+     */
     async verifyOnce() {
       this.setBusy(true);
       try {
@@ -93,7 +115,8 @@ define([], function () {
           return;
         }
       } catch (e) {
-        /* ignore */
+        /* Ignore */
+        console.error(e);
       }
       this.setBusy(false);
 
@@ -104,12 +127,17 @@ define([], function () {
     }
   }
 
-  // AMD entry point (same contract as admin module).
+  /**
+   * AMD entry point (same contract as admin module).
+   *
+   * @param selectors
+   * @param i18n
+   */
   function init(selectors, i18n) {
     const dataset = window.ifthenpay || {};
-    const app = new IfthenpayReturn({ selectors, i18n }, dataset);
+    const app = new IfthenpayReturn({selectors, i18n}, dataset);
     app.init();
   }
 
-  return { init };
+  return {init};
 });
