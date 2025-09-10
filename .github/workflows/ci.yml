@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      # ---- PHP / Composer ----
+      - name: 🐘 Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer
+          coverage: none
+          extensions: mbstring, intl, curl, json
+
+      - name: 📦 Composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer/files
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: 📥 Composer install
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: ✅ PHPCS (Moodle CS)
+        run: composer run lint
+
+      # ---- Node / JS lint only ----
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: 📦 NPM ci
+        run: npm ci
+
+      - name: 🔍 ESLint (JS)
+        run: npm run lint:js -- --max-warnings=0
+
+      - name: 🎨 Stylelint (CSS)
+        run: npm run lint:css
+
+      # ---- Artifact: whole plugin source (no build) ----
+      - name: ⬆️ Upload plugin source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-src-${{ github.ref_name }}-${{ github.run_number }}
+          path: |
+            src/**
+          if-no-files-found: error

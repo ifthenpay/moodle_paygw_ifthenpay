@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*" # e.g., v0.1.0
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      # Optional: run linters here too (kept minimal)
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: 📦 NPM ci
+        run: npm ci
+      - name: 🔍 ESLint & Stylelint
+        run: |
+          npm run lint:js -- --max-warnings=0
+          npm run lint:css
+
+      # Create a plugin ZIP with the correct root folder name (ifthenpay/)
+      - name: 📦 Zip plugin (no build — uses committed assets)
+        run: |
+          set -e
+          rm -rf dist && mkdir -p dist
+          rsync -a --delete \
+            --exclude=".DS_Store" \
+            --exclude="Thumbs.db" \
+            src/ dist/ifthenpay/
+          (cd dist && zip -r ifthenpay-${GITHUB_REF_NAME}.zip ifthenpay)
+
+      - name: ⬆️ Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-zip-${{ github.ref_name }}
+          path: dist/ifthenpay-${{ github.ref_name }}.zip
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/ifthenpay-${{ github.ref_name }}.zip
+          generate_release_notes: true
