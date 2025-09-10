@@ -26,14 +26,15 @@ define([], function() {
   "use strict";
 
   /**
-     * Get element by ID (self-contained).
-     *
-     * @param {string} id
-     */
-    function $(id) {
-      return document.getElementById(id);
-    }
-/**
+   * Get element by ID (self-contained).
+   *
+   * @param {string} id
+   */
+  function $(id) {
+    return document.getElementById(id);
+  }
+
+  /**
    * Retry Button toggle.
    *
    * @param {HTMLElement} btn
@@ -41,8 +42,8 @@ define([], function() {
    */
   function disable(btn, yes) {
     if (!btn) {
-return;
-}
+      return;
+    }
     if (yes) {
       btn.setAttribute("disabled", "disabled");
       btn.classList.add("disabled");
@@ -84,14 +85,14 @@ return;
       this.retry.addEventListener("click", (e) => {
         e.preventDefault();
         if (this.retried || this.busy) {
-return;
-}
+          return;
+        }
         this.retried = true;
         this.verifyOnce();
       });
     }
 
-/**
+    /**
      * Set busy state (spinner + disable retry button).
      *
      * @param {boolean} on
@@ -99,11 +100,11 @@ return;
     setBusy(on) {
       this.busy = !!on;
       if (this.spinner) {
-this.spinner.style.display = on ? "" : "none";
-}
+        this.spinner.style.display = on ? "" : "none";
+      }
       if (this.status && this.t.verifying) {
-this.status.textContent = this.t.verifying;
-}
+        this.status.textContent = this.t.verifying;
+      }
       disable(this.retry, on || this.retried); // Lock after first click
     }
 
@@ -134,16 +135,16 @@ this.status.textContent = this.t.verifying;
   }
 
   /**
-     * AMD entry point (same contract as admin module).
-     *
-     * @param {Object} selectors
-     * @param {Object} i18n
-     */
-    function init(selectors, i18n) {
-      const dataset = window.ifthenpay || {};
-      const app = new IfthenpayReturn({selectors, i18n}, dataset);
-      app.init();
-    }
+   * AMD entry point (same contract as admin module).
+   *
+   * @param {Object} selectors
+   * @param {Object} i18n
+   */
+  function init(selectors, i18n) {
+    const dataset = window.ifthenpay || {};
+    const app = new IfthenpayReturn({selectors, i18n}, dataset);
+    app.init();
+  }
 
   return {init};
 });

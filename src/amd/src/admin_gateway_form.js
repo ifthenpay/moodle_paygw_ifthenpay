@@ -86,15 +86,13 @@ define(["jquery"], function($) {
      */
     init() {
       if (!this.$gk.length) {
-return;
-}
+        return;
+      }
 
       // Initial render pass: build from LIVE dataset,
       // defaults were applied by PHP; we just enforce row consistency and sync.
       const gk = this.$gk.val();
-      this.methodKeys.forEach((m) =>
-        this.applyRowCycle(m, gk, /* initial*/ true)
-      );
+      this.methodKeys.forEach((m) => this.applyRowCycle(m, gk));
       this.syncAllToState();
 
       // Wire interactions.
@@ -104,7 +102,6 @@ return;
       this.bindSubmitGuard();
     }
 
-
     /**
      * Cached accessors (methods checkboxes).
      *
@@ -113,8 +110,8 @@ return;
     $cbOf(methodKey) {
       const key = this.s.enablePrefix + methodKey;
       if (this._cb.has(key)) {
-return this._cb.get(key);
-}
+        return this._cb.get(key);
+      }
       const $el = Dom.checkbox(key);
       this._cb.set(key, $el);
       return $el;
@@ -127,8 +124,8 @@ return this._cb.get(key);
     $selOf(methodKey) {
       const key = this.s.accountPrefix + methodKey;
       if (this._sel.has(key)) {
-return this._sel.get(key);
-}
+        return this._sel.get(key);
+      }
       const $el = Dom.select(key);
       this._sel.set(key, $el);
       return $el;
@@ -142,14 +139,13 @@ return this._sel.get(key);
      *
      * @param {string} methodKey
      * @param {string} gatewayKey
-     * @param {boolean} [initial=false]
      */
-    applyRowCycle(methodKey, gatewayKey, initial = false) {
+    applyRowCycle(methodKey, gatewayKey) {
       const $cb = this.$cbOf(methodKey);
       const $sel = this.$selOf(methodKey);
       if (!$cb.length || !$sel.length) {
-return;
-}
+        return;
+      }
 
       const optionsByMethod =
         this.ds.accounts && this.ds.accounts[gatewayKey]
@@ -160,7 +156,7 @@ return;
       // If there are no accounts for this method under this GK, force off + lock.
       if (!hasAccounts) {
         $cb.prop("checked", false).prop("disabled", true);
-        this.lockSelect($sel, true, /* forceEmpty*/ true);
+        this.lockSelect($sel, true, true);
       } else {
         // Enable checkbox; select is enabled iff checkbox is checked.
         $cb.prop("disabled", false);
@@ -233,13 +229,13 @@ return;
      */
     readState() {
       if (!this.$state.length) {
-return {gatewaykey: "", methods: {}};
-}
+        return {gatewaykey: "", methods: {}};
+      }
       const raw = this.$state.val() || "{}";
       const st = Dom.parseJSON(raw, {}) || {};
       if (!st.methods || typeof st.methods !== "object") {
-st.methods = {};
-}
+        st.methods = {};
+      }
       return st;
     }
 
@@ -250,8 +246,8 @@ st.methods = {};
      */
     writeState(st) {
       if (this.$state.length) {
-this.$state.val(JSON.stringify(st));
-}
+        this.$state.val(JSON.stringify(st));
+      }
     }
 
     /**
@@ -276,11 +272,11 @@ this.$state.val(JSON.stringify(st));
       const st = this.readState();
       st.gatewaykey = this.$gk.val() || "";
       if (this.$def.length) {
-st.defaultmethod = this.$def.val() || "";
-}
+        st.defaultmethod = this.$def.val() || "";
+      }
       if (this.$desc.length) {
-st.description = this.$desc.val() || "";
-}
+        st.description = this.$desc.val() || "";
+      }
       this.methodKeys.forEach((m) => this.syncRow(st, m));
       this.writeState(st);
     }
@@ -321,11 +317,11 @@ st.description = this.$desc.val() || "";
      */
     bindOtherChanges() {
       if (this.$def.length) {
-this.$def.on("change", () => this.syncAllToState());
-}
+        this.$def.on("change", () => this.syncAllToState());
+      }
       if (this.$desc.length) {
-this.$desc.on("input change", () => this.syncAllToState());
-}
+        this.$desc.on("input change", () => this.syncAllToState());
+      }
     }
 
     /**
