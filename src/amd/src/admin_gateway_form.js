@@ -85,7 +85,9 @@ define(["jquery"], function($) {
      * Initialise the module (attach events, etc).
      */
     init() {
-      if (!this.$gk.length) {return;}
+      if (!this.$gk.length) {
+return;
+}
 
       // Initial render pass: build from LIVE dataset,
       // defaults were applied by PHP; we just enforce row consistency and sync.
@@ -106,11 +108,13 @@ define(["jquery"], function($) {
     /**
      * Cached accessors (methods checkboxes).
      *
-     * @param methodKey
+     * @param {string} methodKey
      */
     $cbOf(methodKey) {
       const key = this.s.enablePrefix + methodKey;
-      if (this._cb.has(key)) {return this._cb.get(key);}
+      if (this._cb.has(key)) {
+return this._cb.get(key);
+}
       const $el = Dom.checkbox(key);
       this._cb.set(key, $el);
       return $el;
@@ -118,11 +122,13 @@ define(["jquery"], function($) {
     /**
      * Cached accessors (methods dropdowns/selectors).
      *
-     * @param methodKey
+     * @param {string} methodKey
      */
     $selOf(methodKey) {
       const key = this.s.accountPrefix + methodKey;
-      if (this._sel.has(key)) {return this._sel.get(key);}
+      if (this._sel.has(key)) {
+return this._sel.get(key);
+}
       const $el = Dom.select(key);
       this._sel.set(key, $el);
       return $el;
@@ -134,14 +140,16 @@ define(["jquery"], function($) {
      * - Keep current selection if still valid, else pick first
      * - Lock controls if no accounts or if checkbox off
      *
-     * @param methodKey
-     * @param gatewayKey
-     * @param initial
+     * @param {string} methodKey
+     * @param {string} gatewayKey
+     * @param {boolean} [initial=false]
      */
     applyRowCycle(methodKey, gatewayKey, initial = false) {
       const $cb = this.$cbOf(methodKey);
       const $sel = this.$selOf(methodKey);
-      if (!$cb.length || !$sel.length) {return;}
+      if (!$cb.length || !$sel.length) {
+return;
+}
 
       const optionsByMethod =
         this.ds.accounts && this.ds.accounts[gatewayKey]
@@ -165,8 +173,8 @@ define(["jquery"], function($) {
      * Keeps previous value if still present; otherwise selects the first value.
      * Inserts a placeholder ('' => i18n.noaccounts) if map is empty and selects it.
      *
-     * @param $sel
-     * @param map
+     * @param {jQuery} $sel
+     * @param {Object} map
      * @returns {boolean} true if it has real accounts; false if placeholder only.
      */
     rebuildSelect($sel, map) {
@@ -200,9 +208,9 @@ define(["jquery"], function($) {
     /**
      * Toggle disabled + subtle UI class for selects.
      *
-     * @param $sel
-     * @param locked
-     * @param forceEmpty
+     * @param {jQuery} $sel
+     * @param {boolean} locked
+     * @param {boolean} [forceEmpty]
      */
     lockSelect($sel, locked, forceEmpty) {
       $sel.toggleClass("ifp-ui-locked", !!locked);
@@ -224,27 +232,33 @@ define(["jquery"], function($) {
      * State sync (hidden input mirrors UI).
      */
     readState() {
-      if (!this.$state.length) {return {gatewaykey: "", methods: {}};}
+      if (!this.$state.length) {
+return {gatewaykey: "", methods: {}};
+}
       const raw = this.$state.val() || "{}";
       const st = Dom.parseJSON(raw, {}) || {};
-      if (!st.methods || typeof st.methods !== "object") {st.methods = {};}
+      if (!st.methods || typeof st.methods !== "object") {
+st.methods = {};
+}
       return st;
     }
 
     /**
      * Write state back to hidden input.
      *
-     * @param st
+     * @param {Object} st
      */
     writeState(st) {
-      if (this.$state.length) {this.$state.val(JSON.stringify(st));}
+      if (this.$state.length) {
+this.$state.val(JSON.stringify(st));
+}
     }
 
     /**
      * Sync one row (payment method div) from UI to state.
      *
-     * @param st
-     * @param methodKey
+     * @param {Object} st
+     * @param {string} methodKey
      */
     syncRow(st, methodKey) {
       const $cb = this.$cbOf(methodKey);
@@ -261,8 +275,12 @@ define(["jquery"], function($) {
     syncAllToState() {
       const st = this.readState();
       st.gatewaykey = this.$gk.val() || "";
-      if (this.$def.length) {st.defaultmethod = this.$def.val() || "";}
-      if (this.$desc.length) {st.description = this.$desc.val() || "";}
+      if (this.$def.length) {
+st.defaultmethod = this.$def.val() || "";
+}
+      if (this.$desc.length) {
+st.description = this.$desc.val() || "";
+}
       this.methodKeys.forEach((m) => this.syncRow(st, m));
       this.writeState(st);
     }
@@ -302,9 +320,12 @@ define(["jquery"], function($) {
      * Bind other changes (description, default method).
      */
     bindOtherChanges() {
-      if (this.$def.length) {this.$def.on("change", () => this.syncAllToState());}
-      if (this.$desc.length)
-        {this.$desc.on("input change", () => this.syncAllToState());}
+      if (this.$def.length) {
+this.$def.on("change", () => this.syncAllToState());
+}
+      if (this.$desc.length) {
+this.$desc.on("input change", () => this.syncAllToState());
+}
     }
 
     /**
@@ -321,8 +342,8 @@ define(["jquery"], function($) {
   /**
    * AMD entry point.
    *
-   * @param selectors
-   * @param i18n
+   * @param {Object} selectors
+   * @param {Object} i18n
    */
   function init(selectors, i18n) {
     const dataset = window.ifthenpay || {};

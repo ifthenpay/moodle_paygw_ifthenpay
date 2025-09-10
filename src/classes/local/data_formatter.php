@@ -126,7 +126,7 @@ class data_formatter
      * @param float     $cost          Raw payment amount.
      * @param \stdClass $state         Decoded ifthenpay_state (gateway form state).
      * @param string    $token         Unique token for this payment attempt.
-     * @param string    $desc_checkout  Optional checkout description.
+     * @param string    $desccheckout  Optional checkout description.
      * @return array    Payload for api_client::create_pay_by_link().
      */
     public static function build_pay_by_link_payload(
@@ -177,7 +177,7 @@ class data_formatter
      *
      * @param stdClass $state         Decoded ifthenpay_state.
      * @param string   $token         Payment token.
-     * @param string   $desc_checkout Optional checkout description.
+     * @param string   $desccheckout Optional checkout description.
      * @return string
      */
     private static function make_description(stdClass $state, string $token, string $desccheckout): string {

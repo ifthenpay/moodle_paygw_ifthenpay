@@ -5,53 +5,66 @@ const promise = require('eslint-plugin-promise');
 const globals = require('globals');
 
 module.exports = [
-  // Ignore (replaces .eslintignore)
+  // Replace .eslintignore
   {
     ignores: [
       'node_modules/**',
       'vendor/**',
-      'src/amd/build/**',
-      '**/*.min.js'
+      '**/amd/build/**',
+      '**/*.min.js',
     ],
   },
 
   // Base recommended
   js.configs.recommended,
 
-  // Project JS (AMD in browser + jQuery)
+  // Project rules (match Moodle checks)
   {
-    files: ['src/amd/src/**/*.js'],
+    files: [
+      'src/amd/src/**/*.js',
+    ],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'script',
       globals: {
         ...globals.browser,
         ...globals.jquery,
-        define: 'readonly',   // AMD
-        require: 'readonly'
-      }
+        define: 'readonly',
+        require: 'readonly',
+      },
+    },
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
     },
     plugins: {
       babel,
       jsdoc,
-      promise
+      promise,
     },
     rules: {
+      // Spacing & braces (Moodle flags these a lot)
       curly: ['error', 'all'],
+      'brace-style': ['error', '1tbs', { allowSingleLine: false }],
+      'block-spacing': ['error', 'always'],
       'space-before-function-paren': ['error', { anonymous: 'never', named: 'never', asyncArrow: 'always' }],
-      'capitalized-comments': ['warn', 'always', { ignoreInlineComments: true, ignoreConsecutiveComments: true }],
-      'spaced-comment': ['error', 'always'],
       'object-curly-spacing': ['error', 'never'],
       'babel/object-curly-spacing': ['error', 'never'],
+      'spaced-comment': ['error', 'always'],
+      'capitalized-comments': ['warn', 'always', { ignoreInlineComments: true, ignoreConsecutiveComments: true }],
+
+      // General hygiene
+      'no-console': 'error',
       'no-empty-function': 'error',
       'no-unused-vars': ['error', { args: 'none', ignoreRestSiblings: true }],
+
+      // Promises
       'promise/always-return': 'warn',
-      'jsdoc/require-jsdoc': ['warn', {
-        publicOnly: false,
-        require: { FunctionDeclaration: true, MethodDefinition: true }
-      }],
-      'jsdoc/require-param': 'warn',
-      'jsdoc/require-returns': 'off'
-    }
-  }
+
+      // JSDoc (Moodle requires param + types)
+      'jsdoc/require-jsdoc': ['warn', { publicOnly: false, require: { FunctionDeclaration: true, MethodDefinition: true } }],
+      'jsdoc/require-param': 'error',
+      'jsdoc/require-param-type': 'error',
+      'jsdoc/require-returns': 'off',
+    },
+  },
 ];

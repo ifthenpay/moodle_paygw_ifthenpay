@@ -26,21 +26,23 @@ define([], function() {
   "use strict";
 
   /**
-   * Get element by ID (self-contained).
-   *
-   * @param id
-   */
-  function $(id) {
-    return document.getElementById(id);
-  }
-  /**
+     * Get element by ID (self-contained).
+     *
+     * @param {string} id
+     */
+    function $(id) {
+      return document.getElementById(id);
+    }
+/**
    * Retry Button toggle.
    *
-   * @param btn
-   * @param yes
+   * @param {HTMLElement} btn
+   * @param {boolean} yes
    */
   function disable(btn, yes) {
-    if (!btn) {return;}
+    if (!btn) {
+return;
+}
     if (yes) {
       btn.setAttribute("disabled", "disabled");
       btn.classList.add("disabled");
@@ -81,22 +83,27 @@ define([], function() {
       // Single-use retry.
       this.retry.addEventListener("click", (e) => {
         e.preventDefault();
-        if (this.retried || this.busy) {return;}
+        if (this.retried || this.busy) {
+return;
+}
         this.retried = true;
         this.verifyOnce();
       });
     }
 
-    /**
+/**
      * Set busy state (spinner + disable retry button).
      *
-     * @param on
+     * @param {boolean} on
      */
     setBusy(on) {
       this.busy = !!on;
-      if (this.spinner) {this.spinner.style.display = on ? "" : "none";}
-      if (this.status && this.t.verifying)
-        {this.status.textContent = this.t.verifying;}
+      if (this.spinner) {
+this.spinner.style.display = on ? "" : "none";
+}
+      if (this.status && this.t.verifying) {
+this.status.textContent = this.t.verifying;
+}
       disable(this.retry, on || this.retried); // Lock after first click
     }
 
@@ -114,9 +121,8 @@ define([], function() {
           window.location.assign(this.ds.successUrl);
           return;
         }
-      } catch (e) {
+      } catch {
         /* Ignore */
-        console.error(e);
       }
       this.setBusy(false);
 
@@ -128,16 +134,16 @@ define([], function() {
   }
 
   /**
-   * AMD entry point (same contract as admin module).
-   *
-   * @param selectors
-   * @param i18n
-   */
-  function init(selectors, i18n) {
-    const dataset = window.ifthenpay || {};
-    const app = new IfthenpayReturn({selectors, i18n}, dataset);
-    app.init();
-  }
+     * AMD entry point (same contract as admin module).
+     *
+     * @param {Object} selectors
+     * @param {Object} i18n
+     */
+    function init(selectors, i18n) {
+      const dataset = window.ifthenpay || {};
+      const app = new IfthenpayReturn({selectors, i18n}, dataset);
+      app.init();
+    }
 
   return {init};
 });

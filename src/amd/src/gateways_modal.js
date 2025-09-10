@@ -23,7 +23,6 @@
 
 /* eslint-disable promise/always-return */
 /* eslint-disable no-empty-function */
-/* eslint-disable no-undef */
 
 define(["core/templates", "core/modal_factory"], function(
   Templates,
@@ -43,6 +42,7 @@ define(["core/templates", "core/modal_factory"], function(
   const process = function(component, paymentArea, itemId, description) {
     return showModalWithPlaceholder().then(function() {
       window.location.href =
+        // eslint-disable-next-line no-undef
         M.cfg.wwwroot + "/payment/gateway/ifthenpay/pay.php?"
         + "component=" + component
         + "&paymentarea=" + paymentArea
